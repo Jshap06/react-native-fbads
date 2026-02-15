@@ -51,9 +51,8 @@ describe('FacebookAdsConfig', () => {
 
     it('should return frozen object', () => {
       const config = getFacebookAdsConfig();
-      expect(() => {
-        (config as any).enableDebugLogging = true;
-      }).toThrow();
+      (config as { enableDebugLogging: boolean }).enableDebugLogging = true;
+      expect(config.enableDebugLogging).toBe(false);
     });
   });
 

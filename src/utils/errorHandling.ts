@@ -79,15 +79,15 @@ export async function withErrorHandling<T>(
 /**
  * Creates a safe wrapper for callbacks that handles errors gracefully
  */
-export function createSafeCallback<T extends (...args: any[]) => any>(
-  callback: T | undefined,
+export function createSafeCallback<TArgs extends unknown[], TResult>(
+  callback: ((...args: TArgs) => TResult) | undefined,
   errorHandler?: (error: FacebookAdsException) => void
-): T {
+): (...args: TArgs) => TResult | undefined {
   if (!callback) {
-    return (() => undefined) as T;
+    return () => undefined;
   }
 
-  return ((...args: Parameters<T>) => {
+  return (...args: TArgs) => {
     try {
       return callback(...args);
     } catch (error) {
@@ -105,7 +105,8 @@ export function createSafeCallback<T extends (...args: any[]) => any>(
       // Don't re-throw to prevent crash
       console.error('[FacebookAds] Error in callback:', fbError);
     }
-  }) as T;
+    return undefined;
+  };
 }
 
 /**
@@ -129,7 +130,7 @@ export interface TelemetryEvent {
   code?: FacebookAdsErrorCode;
   context: string;
   duration?: number;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface ITelemetryService {
@@ -144,17 +145,19 @@ export interface ITelemetryService {
 export class DefaultTelemetryService implements ITelemetryService {
   recordEvent(event: TelemetryEvent): void {
     if (process.env.NODE_ENV === 'development') {
-      console.log('[FacebookAds] Event:', event);
+      console.warn('[FacebookAds] Event:', event);
     }
   }
 
   recordError(error: FacebookAdsException): void {
-    console.error('[FacebookAds] Error recorded:', error.toJSON());
+    if (process.env.NODE_ENV !== 'test') {
+      console.error('[FacebookAds] Error recorded:', error.toJSON());
+    }
   }
 
   recordPerformance(context: string, duration: number): void {
     if (process.env.NODE_ENV === 'development') {
-      console.log(`[FacebookAds] Performance ${context}: ${duration}ms`);
+      console.warn(`[FacebookAds] Performance ${context}: ${duration}ms`);
     }
   }
 }

@@ -1,72 +1,68 @@
-import React, {Component} from 'react';
-import {StyleSheet, Dimensions, TouchableHighlight} from 'react-native';
-import {Container, Text} from 'native-base';
-import {Actions} from 'react-native-router-flux';
-import {AdSettings} from 'react-native-fbads';
+import React from 'react';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
-const {width} = Dimensions.get('window');
+const SCREEN = {
+  NATIVE: 'native',
+  BANNER: 'banner',
+  INTERSTITIAL: 'interstitial',
+};
 
-export default class Main extends Component {
-  async componentDidMount() {
-    AdSettings.setLogLevel('debug');
-    AdSettings.addTestDevice(AdSettings.currentDeviceHash);
-    const requestedStatus = await AdSettings.requestTrackingPermission();
-
-    if (requestedStatus === 'authorized' || requestedStatus === 'unavailable') {
-      AdSettings.setAdvertiserIDCollectionEnabled(true);
-      // Both calls are not related to each other
-      // FB won't deliver any ads if this is set to false or not called at all.
-      AdSettings.setAdvertiserTrackingEnabled(true);
-    }
-  }
-
-  componentWillUnmount() {
-    AdSettings.clearTestDevices();
-  }
-  render() {
-    return (
-      <Container style={styles.container}>
-        <TouchableHighlight
-          underlayColor="#b2bbbc"
-          style={styles.button}
-          onPress={() => Actions.nativeAd()}>
-          <Text style={styles.buttonText}>Native Ad</Text>
-        </TouchableHighlight>
-        <TouchableHighlight
-          underlayColor="#b2bbbc"
-          onPress={() => Actions.bannerAd()}
-          style={styles.button}>
-          <Text style={styles.buttonText}>Banner Ad</Text>
-        </TouchableHighlight>
-        <TouchableHighlight
-          underlayColor="#b2bbbc"
-          onPress={() => Actions.interstitialAd()}
-          style={styles.button}>
-          <Text style={styles.buttonText}>Interstitial Ad</Text>
-        </TouchableHighlight>
-      </Container>
-    );
-  }
+export default function Main({onOpenScreen}) {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Audience Network Demos</Text>
+      <TouchableOpacity
+        accessibilityRole="button"
+        style={styles.button}
+        onPress={() => onOpenScreen(SCREEN.NATIVE)}
+      >
+        <Text style={styles.buttonText}>Native Ads</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        accessibilityRole="button"
+        style={styles.button}
+        onPress={() => onOpenScreen(SCREEN.BANNER)}
+      >
+        <Text style={styles.buttonText}>Banner Ads</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        accessibilityRole="button"
+        style={styles.button}
+        onPress={() => onOpenScreen(SCREEN.INTERSTITIAL)}
+      >
+        <Text style={styles.buttonText}>Interstitial Ads</Text>
+      </TouchableOpacity>
+    </View>
+  );
 }
 
-let styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
-    width,
-    position: 'absolute',
+    flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
+    paddingHorizontal: 20,
+    backgroundColor: '#f4f6f8',
+  },
+  title: {
+    textAlign: 'center',
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#1f2d3d',
+    marginBottom: 24,
   },
   button: {
-    elevation: 3,
-    borderRadius: 10,
-    paddingVertical: 10,
-    width: width - 80,
-    alignItems: 'center',
-    marginVertical: 5,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
+    borderRadius: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    marginBottom: 12,
+    backgroundColor: '#ffffff',
+    borderWidth: 1,
+    borderColor: '#d8dde2',
   },
   buttonText: {
-    color: '#a70f0a',
+    textAlign: 'center',
+    color: '#0a5cff',
+    fontWeight: '600',
+    fontSize: 16,
   },
 });

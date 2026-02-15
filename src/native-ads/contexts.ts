@@ -1,6 +1,8 @@
 import React from 'react';
 
-export type ComponentOrClass = React.ComponentClass<any> | React.Component;
+export type ComponentOrClass =
+  | React.ComponentClass<unknown>
+  | React.Component<unknown, unknown>;
 
 type Receiver = (c: ComponentOrClass) => void;
 export interface MultipleRegisterablesContextValueType {
@@ -27,21 +29,17 @@ const defaultValue = {
   }
 };
 
-// tslint:disable-next-line:variable-name
 export const TriggerableContext = React.createContext<
   TriggerableContextValueType
 >(defaultValue);
-// tslint:disable-next-line:variable-name
 export const MediaViewContext = React.createContext<MediaViewContextValueType>(
   defaultValue
 );
 
-// tslint:disable-next-line:variable-name
 export const AdIconViewContext = React.createContext<
   AdIconViewContextValueType
 >(defaultValue);
 
-// tslint:disable-next-line:variable-name
 export const AdChoicesViewContext = React.createContext<
   AdChoicesViewContextValueType
 >('');

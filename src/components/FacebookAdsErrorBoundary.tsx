@@ -1,6 +1,10 @@
 import React, { ReactNode } from 'react';
 import { View, Text } from 'react-native';
-import { FacebookAdsException, getTelemetryService } from '../utils/errorHandling';
+import {
+  FacebookAdsException,
+  FacebookAdsErrorCode,
+  getTelemetryService,
+} from '../utils/errorHandling';
 
 interface Props {
   children: ReactNode;
@@ -31,7 +35,7 @@ export class FacebookAdsErrorBoundary extends React.Component<Props, State> {
       error instanceof FacebookAdsException
         ? error
         : new FacebookAdsException(
-            'UNKNOWN' as any,
+            FacebookAdsErrorCode.UNKNOWN,
             'ErrorBoundary',
             error instanceof Error ? error.message : 'Unknown error occurred'
           );
@@ -47,7 +51,7 @@ export class FacebookAdsErrorBoundary extends React.Component<Props, State> {
       error instanceof FacebookAdsException
         ? error
         : new FacebookAdsException(
-            'UNKNOWN' as any,
+            FacebookAdsErrorCode.UNKNOWN,
             'ErrorBoundary',
             error.message
           );

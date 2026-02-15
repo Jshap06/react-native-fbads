@@ -2,8 +2,6 @@ import InterstitialAdManager from '../InterstitialAdManager';
 import NativeModuleRegistry from '../native/NativeModuleRegistry';
 import { FacebookAdsException } from '../utils/errorHandling';
 
-jest.mock('../native/NativeModuleRegistry');
-
 describe('InterstitialAdManager', () => {
   beforeEach(() => {
     jest.clearAllMocks();

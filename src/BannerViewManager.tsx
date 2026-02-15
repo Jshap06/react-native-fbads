@@ -6,7 +6,11 @@ import {
   View,
   StyleSheet,
 } from 'react-native';
-import { FacebookAdsException, validatePlacementId } from './utils/errorHandling';
+import {
+  FacebookAdsException,
+  FacebookAdsErrorCode,
+  validatePlacementId,
+} from './utils/errorHandling';
 
 type AdSize = 'large' | 'standard';
 
@@ -105,7 +109,7 @@ const BannerView = React.forwardRef<View, BannerViewProps>(
 
     const handleAdError = useCallback((message: string) => {
       const error = new FacebookAdsException(
-        'AD_LOAD_FAILED' as any,
+        FacebookAdsErrorCode.AD_LOAD_FAILED,
         'BannerView',
         message
       );

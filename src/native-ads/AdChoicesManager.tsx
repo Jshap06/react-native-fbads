@@ -18,7 +18,6 @@ interface AdChoicesProps {
   style?: StyleProp<ViewStyle>;
 }
 
-// tslint:disable-next-line:variable-name
 const NativeAdChoicesView = requireNativeComponent<
   AdChoicesProps & { placementId: string }
 >('AdChoicesView');

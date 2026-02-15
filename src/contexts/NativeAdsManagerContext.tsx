@@ -53,7 +53,7 @@ export const NativeAdsManagerProvider: React.FC<NativeAdsManagerProviderProps> =
     try {
       const emitter =
         Platform.OS === 'ios'
-          ? new NativeEventEmitter(NativeModuleRegistry.NativeAdEmitter as any)
+          ? new NativeEventEmitter(NativeModuleRegistry.NativeAdEmitter)
           : DeviceEventEmitter;
 
       const handleManagersChanged = (managersData: Record<string, boolean>) => {

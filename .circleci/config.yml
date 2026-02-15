@@ -1,8 +1,8 @@
-version: 2
+version: 2.1
 
 defaults: &defaults
   docker:
-    - image: circleci/node:10
+    - image: cimg/node:20.11
   working_directory: ~/react-native-fbads
 
 jobs:
@@ -10,39 +10,74 @@ jobs:
     <<: *defaults
     steps:
       - checkout
-      - attach_workspace:
-          at: ~/react-native-fbads
       - restore_cache:
           keys:
-            - dependencies-{{ checksum "package.json" }}
-            - dependencies-
-      - run: |
-          yarn install --frozen-lockfile
+            - npm-deps-v1-{{ checksum "package-lock.json" }}
+            - npm-deps-v1-
+      - run:
+          name: Install dependencies
+          command: npm ci
       - save_cache:
-          key: dependencies-{{ checksum "package.json" }}
-          paths: node_modules
+          key: npm-deps-v1-{{ checksum "package-lock.json" }}
+          paths:
+            - ~/.npm
+            - node_modules
       - persist_to_workspace:
           root: .
-          paths: .
+          paths:
+            - .
+
   lint:
     <<: *defaults
     steps:
       - attach_workspace:
           at: ~/react-native-fbads
-      - run: |
-          yarn lint
-  flow:
+      - run:
+          name: Lint
+          command: npm run lint
+
+  type-check:
     <<: *defaults
     steps:
       - attach_workspace:
           at: ~/react-native-fbads
-      - run: |
-          yarn flow
+      - run:
+          name: Type check
+          command: npm run type-check
+
+  test:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/react-native-fbads
+      - run:
+          name: Unit tests
+          command: npm run test -- --runInBand
+
+  package-integrity:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/react-native-fbads
+      - run:
+          name: Package dry run
+          command: npm pack --dry-run
+
 workflows:
-  version: 2
   build-and-test:
     jobs:
       - install-dependencies
       - lint:
           requires:
             - install-dependencies
+      - type-check:
+          requires:
+            - install-dependencies
+      - test:
+          requires:
+            - install-dependencies
+      - package-integrity:
+          requires:
+            - lint
+            - type-check
+            - test

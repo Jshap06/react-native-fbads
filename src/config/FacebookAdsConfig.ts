@@ -79,8 +79,8 @@ export function configureFacebookAds(config: Partial<FacebookAdsConfig>): void {
     setTelemetryService(new DefaultTelemetryService());
   }
 
-  if (globalConfig.enableDebugLogging) {
-    console.log('[FacebookAds] Configuration updated:', globalConfig);
+  if (globalConfig.enableDebugLogging && process.env.NODE_ENV === 'development') {
+    console.warn('[FacebookAds] Configuration updated:', globalConfig);
   }
 }
 
@@ -107,7 +107,7 @@ export function updateFacebookAdsConfig<K extends keyof FacebookAdsConfig>(
 ): void {
   globalConfig[key] = value;
 
-  if (globalConfig.enableDebugLogging) {
-    console.log(`[FacebookAds] Config "${key}" updated to:`, value);
+  if (globalConfig.enableDebugLogging && process.env.NODE_ENV === 'development') {
+    console.warn(`[FacebookAds] Config "${key}" updated to:`, value);
   }
 }

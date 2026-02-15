@@ -1,9 +1,6 @@
 import AdSettings from '../AdSettings';
 import NativeModuleRegistry from '../native/NativeModuleRegistry';
 
-// Mock the native module registry
-jest.mock('../native/NativeModuleRegistry');
-
 describe('AdSettings', () => {
   beforeEach(() => {
     jest.clearAllMocks();

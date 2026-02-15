@@ -13,7 +13,12 @@ const AdSettings = {
    */
   get currentDeviceHash(): string {
     try {
-      return NativeModuleRegistry.AdSettings.currentDeviceHash;
+      const hash = NativeModuleRegistry.AdSettings.currentDeviceHash;
+      if (typeof hash === 'string') {
+        return hash;
+      }
+      console.error('[FacebookAds] Failed to get device hash: native module returned invalid value');
+      return '';
     } catch (error) {
       console.error('[FacebookAds] Failed to get device hash:', error);
       return '';

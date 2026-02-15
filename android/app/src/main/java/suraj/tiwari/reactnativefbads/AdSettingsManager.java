@@ -9,12 +9,15 @@ import com.facebook.react.bridge.LifecycleEventListener;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.module.annotations.ReactModule;
+import com.facebook.react.turbomodule.core.interfaces.TurboModule;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.HashSet;
 
-public class AdSettingsManager extends ReactContextBaseJavaModule implements LifecycleEventListener {
+@ReactModule(name = AdSettingsManager.NAME)
+public class AdSettingsManager extends ReactContextBaseJavaModule implements LifecycleEventListener, TurboModule {
 
     public static final String NAME = "CTKAdSettingsManager";
     final static private String TAG = AdSettingsManager.class.getName();

@@ -4,13 +4,13 @@
  * with full TypeScript support, hooks API, error handling, and performance monitoring
  */
 
-// Legacy class-based API (maintained for backwards compatibility)
+// Core APIs
 export { default as NativeAdsManager } from './native-ads/NativeAdsManager';
 export { default as InterstitialAdManager } from './InterstitialAdManager';
 export { default as AdSettings } from './AdSettings';
 export { default as BannerView } from './BannerViewManager';
 
-// Native Ad Components (legacy)
+// Native Ad Components
 export { default as MediaView } from './native-ads/MediaViewManager';
 export { default as AdIconView } from './native-ads/AdIconViewManager';
 export { default as TriggerableView } from './native-ads/TriggerableView';

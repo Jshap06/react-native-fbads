@@ -24,7 +24,6 @@ interface NativeAdViewProps {
   children?: ReactNode;
 }
 
-// tslint:disable-next-line:variable-name
 const NativeAdView = requireNativeComponent<NativeAdViewProps>('CTKNativeAd');
 
 interface AdWrapperState {

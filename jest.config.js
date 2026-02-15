@@ -2,7 +2,12 @@ module.exports = {
   preset: 'react-native',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   transform: {
-    '^.+\\.tsx?$': 'ts-jest',
+    '^.+\\.[jt]sx?$': [
+      'babel-jest',
+      {
+        presets: ['module:@react-native/babel-preset'],
+      },
+    ],
   },
   testEnvironment: 'node',
   testMatch: ['**/__tests__/**/*.test.(ts|tsx|js)', '**/?(*.)+(spec|test).(ts|tsx|js)'],
@@ -15,7 +20,7 @@ module.exports = {
     '!src/**/index.ts',
     '!src/**/*.test.{ts,tsx}',
   ],
-  coverageThresholds: {
+  coverageThreshold: {
     global: {
       branches: 70,
       functions: 75,
@@ -24,13 +29,4 @@ module.exports = {
     },
   },
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  globals: {
-    'ts-jest': {
-      tsconfig: {
-        jsx: 'react-native',
-        esModuleInterop: true,
-        allowSyntheticDefaultImports: true,
-      },
-    },
-  },
 };

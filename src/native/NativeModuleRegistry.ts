@@ -49,8 +49,12 @@ export interface NativeAdManagerModuleType extends TurboModule {
  * Type-safe contract for CTKNativeAdEmitter native module
  */
 export interface NativeAdEmitterModuleType extends TurboModule {
-  addListener(eventName: string, callback: (data: any) => void): void;
-  removeListener(eventName: string, callback: (data: any) => void): void;
+  addListener(eventName: string): void;
+  removeListeners(count: number): void;
+  removeListener?(
+    eventName: string,
+    callback: (data: unknown) => void
+  ): void;
 }
 
 /**

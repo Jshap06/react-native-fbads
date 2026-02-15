@@ -9,7 +9,6 @@ import {
 
 export type AdIconViewProps = ViewProps;
 
-// tslint:disable-next-line:variable-name
 export const NativeAdIconView = requireNativeComponent<AdIconViewProps>(
   'AdIconView'
 );

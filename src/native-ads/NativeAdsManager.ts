@@ -53,7 +53,7 @@ export default class NativeAdsManager {
 
     const emitter =
       Platform.OS === 'ios'
-        ? new NativeEventEmitter(NativeModuleRegistry.NativeAdEmitter as any)
+        ? new NativeEventEmitter(NativeModuleRegistry.NativeAdEmitter)
         : DeviceEventEmitter;
 
     NativeAdsManager.managersChangedSubscription = emitter.addListener(

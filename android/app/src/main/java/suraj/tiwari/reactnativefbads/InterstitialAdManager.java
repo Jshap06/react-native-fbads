@@ -9,9 +9,12 @@ import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.module.annotations.ReactModule;
+import com.facebook.react.turbomodule.core.interfaces.TurboModule;
 
+@ReactModule(name = InterstitialAdManager.NAME)
 public class InterstitialAdManager extends ReactContextBaseJavaModule
-    implements InterstitialAdListener, LifecycleEventListener {
+    implements InterstitialAdListener, LifecycleEventListener, TurboModule {
 
   public static final String NAME = "CTKInterstitialAdManager";
 
