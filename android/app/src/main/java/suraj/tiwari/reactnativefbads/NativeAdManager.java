@@ -27,8 +27,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Locale;
 
-@ReactModule(name = "CTKNativeAdManager")
+@ReactModule(name = NativeAdManager.NAME)
 public class NativeAdManager extends ReactContextBaseJavaModule implements NativeAdsManager.Listener {
+  public static final String NAME = "CTKNativeAdManager";
   /**
    * @{Map} with all registered fb ads managers
    **/
@@ -40,7 +41,7 @@ public class NativeAdManager extends ReactContextBaseJavaModule implements Nativ
 
   @Override
   public String getName() {
-    return "CTKNativeAdManager";
+    return NAME;
   }
 
   /**

@@ -72,7 +72,13 @@
     "typescript"
   ],
   "files": [
-    "android",
+    "android/app",
+    "android/build.gradle",
+    "android/gradle.properties",
+    "android/gradle/wrapper",
+    "android/gradlew",
+    "android/gradlew.bat",
+    "android/settings.gradle",
     "ios",
     "src",
     "LICENSE",

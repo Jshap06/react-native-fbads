@@ -1,5 +1,5 @@
 import React, { createContext, ReactNode, useState, useCallback, useEffect } from 'react';
-import { NativeEventEmitter } from 'react-native';
+import { DeviceEventEmitter, NativeEventEmitter, Platform } from 'react-native';
 import NativeModuleRegistry from '../native/NativeModuleRegistry';
 import { FacebookAdsException, FacebookAdsErrorCode } from '../utils/errorHandling';
 
@@ -51,7 +51,10 @@ export const NativeAdsManagerProvider: React.FC<NativeAdsManagerProviderProps> =
   // Setup native event emitter listener
   useEffect(() => {
     try {
-      const emitter = new NativeEventEmitter(NativeModuleRegistry.NativeAdEmitter as any);
+      const emitter =
+        Platform.OS === 'ios'
+          ? new NativeEventEmitter(NativeModuleRegistry.NativeAdEmitter as any)
+          : DeviceEventEmitter;
 
       const handleManagersChanged = (managersData: Record<string, boolean>) => {
         setManagers((prevManagers) => {
@@ -73,30 +76,33 @@ export const NativeAdsManagerProvider: React.FC<NativeAdsManagerProviderProps> =
         });
       };
 
-      const handleAdError = (errorData: { placementId?: string; message: string }) => {
-        const placementId = errorData.placementId;
-        if (placementId) {
-          setManagers((prevManagers) => {
-            const updatedManagers = new Map(prevManagers);
-            const existing = updatedManagers.get(placementId);
-            if (existing) {
-              const error = new FacebookAdsException(
-                FacebookAdsErrorCode.AD_LOAD_FAILED,
-                'NativeAdManager',
-                errorData.message || 'Failed to load ads'
-              );
-              const updated = { ...existing, error, isLoading: false };
-              updatedManagers.set(placementId, updated);
+      const handleAdError = (errorData: unknown) => {
+        const message =
+          typeof errorData === 'string'
+            ? errorData
+            : (errorData as { message?: string } | undefined)?.message ??
+              'Failed to load ads';
 
-              // Notify subscribed callbacks
-              const subs = subscriptions.get(placementId);
-              if (subs) {
-                subs.forEach((callback) => callback(updated));
-              }
+        setManagers((prevManagers) => {
+          const updatedManagers = new Map(prevManagers);
+
+          for (const [placementId, existing] of updatedManagers.entries()) {
+            const error = new FacebookAdsException(
+              FacebookAdsErrorCode.AD_LOAD_FAILED,
+              'NativeAdManager',
+              message
+            );
+            const updated = { ...existing, error, isLoading: false };
+            updatedManagers.set(placementId, updated);
+
+            const subs = subscriptions.get(placementId);
+            if (subs) {
+              subs.forEach((callback) => callback(updated));
             }
-            return updatedManagers;
-          });
-        }
+          }
+
+          return updatedManagers;
+        });
       };
 
       const managersChangedSub = emitter.addListener('CTKNativeAdsManagersChanged', handleManagersChanged);

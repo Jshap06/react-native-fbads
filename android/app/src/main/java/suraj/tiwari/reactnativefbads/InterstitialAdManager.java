@@ -12,6 +12,7 @@ import com.facebook.react.bridge.ReactMethod;
 
 public class InterstitialAdManager extends ReactContextBaseJavaModule implements InterstitialAdListener, LifecycleEventListener {
 
+  public static final String NAME = "CTKInterstitialAdManager";
   private Promise mPromise;
   private boolean mDidClick = false;
   private boolean mDidLoad = false;
@@ -74,7 +75,7 @@ public class InterstitialAdManager extends ReactContextBaseJavaModule implements
 
   @Override
   public String getName() {
-    return "CTKInterstitialAdManager";
+    return NAME;
   }
 
   @Override

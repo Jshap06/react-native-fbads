@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
-import { NativeEventEmitter } from 'react-native';
+import { DeviceEventEmitter, NativeEventEmitter, Platform } from 'react-native';
 import NativeModuleRegistry from '../native/NativeModuleRegistry';
 import { useNativeAdsManagerContext } from '../contexts/NativeAdsManagerContext';
 import { validatePlacementId, FacebookAdsException, FacebookAdsErrorCode } from '../utils/errorHandling';
@@ -211,41 +211,50 @@ export function useNativeAdRef() {
  * Hook to listen for native ad events
  */
 export function useNativeAdEvents(placementId: string) {
-  const [ad, setAd] = useState<any>(null);
+  const ad = null;
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<FacebookAdsException | null>(null);
 
   useEffect(() => {
     try {
-      const emitter = new NativeEventEmitter(NativeModuleRegistry.NativeAdEmitter as any);
+      const emitter =
+        Platform.OS === 'ios'
+          ? new NativeEventEmitter(NativeModuleRegistry.NativeAdEmitter as any)
+          : DeviceEventEmitter;
 
-      const handleAdLoaded = (adData: any) => {
-        if (adData?.placementId === placementId) {
-          setAd(adData.ad);
+      const handleManagersChanged = (managersData: Record<string, boolean>) => {
+        const isReady = Boolean(managersData?.[placementId]);
+        if (isReady) {
           setIsLoading(false);
           setError(null);
         }
       };
 
-      const handleAdError = (errorData: any) => {
-        if (errorData?.placementId === placementId) {
-          const fbError = new FacebookAdsException(
-            FacebookAdsErrorCode.AD_LOAD_FAILED,
-            'NativeAdManager',
-            errorData.message || 'Failed to load native ad'
-          );
-          setError(fbError);
-          setIsLoading(false);
-        }
+      const handleAdError = (errorData: unknown) => {
+        const message =
+          typeof errorData === 'string'
+            ? errorData
+            : (errorData as { message?: string } | undefined)?.message ??
+              'Failed to load native ad';
+
+        const fbError = new FacebookAdsException(
+          FacebookAdsErrorCode.AD_LOAD_FAILED,
+          'NativeAdManager',
+          message
+        );
+        setError(fbError);
+        setIsLoading(false);
       };
 
       setIsLoading(true);
-      const adLoadedSub = emitter.addListener('nativeAdLoaded', handleAdLoaded);
+      const managersChangedSub = emitter.addListener('CTKNativeAdsManagersChanged', handleManagersChanged);
       const errorSub = emitter.addListener('nativeAdError', handleAdError);
+      const fallbackErrorSub = emitter.addListener('onAdError', handleAdError);
 
       return () => {
-        adLoadedSub.remove();
+        managersChangedSub.remove();
         errorSub.remove();
+        fallbackErrorSub.remove();
       };
     } catch (err) {
       const fbError =

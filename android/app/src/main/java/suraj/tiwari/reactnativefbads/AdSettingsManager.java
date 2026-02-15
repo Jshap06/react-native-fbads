@@ -16,6 +16,7 @@ import java.util.HashSet;
 
 public class AdSettingsManager extends ReactContextBaseJavaModule implements LifecycleEventListener {
 
+    public static final String NAME = "CTKAdSettingsManager";
     final static private String TAG = AdSettingsManager.class.getName();
 
     private HashSet<String> mTestDeviceHashes = new HashSet<>();
@@ -30,7 +31,7 @@ public class AdSettingsManager extends ReactContextBaseJavaModule implements Lif
 
     @Override
     public String getName() {
-        return "CTKAdSettingsManager";
+        return NAME;
     }
 
     @ReactMethod
