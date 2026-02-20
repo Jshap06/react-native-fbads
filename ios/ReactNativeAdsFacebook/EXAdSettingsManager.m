@@ -7,7 +7,7 @@
 #import <FBAudienceNetwork/FBAudienceNetwork.h>
 #import <AppTrackingTransparency/AppTrackingTransparency.h>
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
+@import FBSDKCoreKit;
 
 @implementation RCTConvert (EXNativeAdView)
 
