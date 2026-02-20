@@ -11,7 +11,8 @@ Pod::Spec.new do |s|
   s.homepage      = package['homepage']
   s.source        = { :git => 'https://github.com/MK-ayaz/react-native-fbads', :tag => "v#{package['version']}" }
   s.platform      = :ios, '13.0'
-  s.dependency    'React-Core'
+  s.dependency    'React-Core',
+  s.dependency 'FBSDKCoreKit', '~> 16.0'
   s.dependency    'FBAudienceNetwork', '~> 6.21'
   s.pod_target_xcconfig = {
     'DEFINES_MODULE' => 'YES',
