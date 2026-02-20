@@ -7,7 +7,7 @@
 #import <FBAudienceNetwork/FBAudienceNetwork.h>
 #import <AppTrackingTransparency/AppTrackingTransparency.h>
 
-#import <FBSDKCoreKit/FBSDKSettings.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 @implementation RCTConvert (EXNativeAdView)
 
@@ -126,7 +126,7 @@ RCT_EXPORT_METHOD(requestTrackingPermission:(RCTPromiseResolveBlock)resolve reje
 
 RCT_EXPORT_METHOD(setAdvertiserIDCollectionEnabled:(BOOL)enabled)
 {
-    [FBSDKSettings setAdvertiserIDCollectionEnabled:enabled];
+    [Settings.sharedSettings setAdvertiserIDCollectionEnabled:enabled];
 }
 
 
